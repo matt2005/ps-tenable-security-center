@@ -198,11 +198,16 @@ param(
     [parameter(Mandatory=$True, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!")]
     [string]$Password,
 
-    [parameter(Mandatory=$True, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!")]
+    [parameter(Mandatory=$True, HelpMessage="IP ID Number")]
     [int]$id,
 
-    [parameter(Mandatory=$False, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!",)]
-    [boolean]$ipsonly
+    [parameter(Mandatory=$False, HelpMessage="If set to false, removes elements from the returning result like hostnames")]
+    [boolean]$ipsonly = $False
     )
-    return (Invoke-SecurityCenterRequest -Endpoint $Endpoint -Module 'asset' -Action 'init' -User $User -Password $Password).response
+
+    if ($ipsonly) { $ipsonlynum = 1 }  else { $ipsonlynum = 2 }
+
+    $inputparams = @{ "id" = $id; "ipsOnly" = $ipsonlynum }
+
+    return (Invoke-SecurityCenterRequest -Endpoint $Endpoint -Module 'asset' -Action 'getIPs' -User $User -Password $Password -Input $inputparams).response
 }
