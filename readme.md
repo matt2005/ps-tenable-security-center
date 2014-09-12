@@ -15,6 +15,5 @@ Invoke-SecurityCenterRequest -Endpoint https://myseccenter.local/request.php -Us
 
 Known Issues
 ------------
-- No type checking on the Input parameter.
 - No object pipelining. It's a todo.
 - It could really do with more actions rather than just being a wrapper to deal with formatting of requests.
