@@ -53,13 +53,14 @@ param(
             if (!$params.action){ write-error "Please provide an action name"; return; }
 
             # Generate random request ID as not to conflict with a previous session
+            # Note: Documentation is ambiguous as to if this is required, may be needed for different versions.
             $requestId = Get-Random -Minimum 10000 -Maximum 19999
 
             # Generate the request string
             $request = "request_id=" + $requestId + "&module=" + $params.module + "&action=" + $params.action + "&token=" + $session.token
 
             # If there is input for the command, convert the input into URL encoded JSON and concatenate
-            if ($params.ActionInput -ne $null)
+            if ($params.ActionInput)
             {
                 $jsonInput = $params.ActionInput | ConvertTo-Json
                 $encodedinput = [System.Web.HttpUtility]::UrlEncode($jsonInput)
