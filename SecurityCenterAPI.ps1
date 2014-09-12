@@ -51,9 +51,6 @@ param(
             # Check that we were passed the correct parameters
             if (!$params.module){ write-error "Please provide a module name"; return; }
             if (!$params.action){ write-error "Please provide an action name"; return; }
-    
-            # If we're not logged in, perform login function
-            if (!$session) { $session = loginToAPI }
 
             # Generate random request ID as not to conflict with a previous session
             $requestId = Get-Random -Minimum 10000 -Maximum 19999
