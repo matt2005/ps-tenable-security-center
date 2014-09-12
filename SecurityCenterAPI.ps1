@@ -53,7 +53,6 @@ param(
             if (!$params.action){ write-error "Please provide an action name"; return; }
 
             # Generate random request ID as not to conflict with a previous session
-            # Note: Documentation is ambiguous as to if this is required, may be needed for different versions.
             $requestId = Get-Random -Minimum 10000 -Maximum 19999
 
             # Generate the request string
@@ -101,6 +100,109 @@ param(
     Process
     {
         $params = @{ module = $Module; action = $Action; ActionInput = $ActionInput }
-        return runCommand($params)
+        return runCommand($params)   
     }
+}
+
+
+function global:Get-SecurityCenterAlerts{
+<#
+    .SYNOPSIS
+    This Cmdlet allows you to quickly and easily interact with Tennable's Network Security Center Product. 
+ 
+    .DESCRIPTION
+    This module allows you to quickly and easily interact with Tennable's Network Security Center Product. The product's API does some weird things that aren't very well documented- requires a mixmatch of JSON and URL-encoded parameters in different locations, as well as having some pretty random parameters.
+ 
+    .EXAMPLE
+    Get-SecurityCenterAlerts -Endpoint https://myseccenter.local/request.php -User admin -Password admin
+    Returns a result object, containing a results hashtable containing assets as stored in Security Center
+
+    .NOTES
+    Be sure to be using a HTTPS endpoint- basic authentication is used.
+
+    .LINK
+    https://github.com/antmldr/ps-tenable-security-center
+#>
+[CmdletBinding()]
+param(
+    [parameter(Mandatory=$True, HelpMessage="http(s) endpoint (typically https://host.example/request.php)")]
+    [string]$Endpoint,
+    
+    [parameter(Mandatory=$True, HelpMessage="SC API username, passed in using basic auth. Endpoint must support https for this to be encrypted!")] 
+    [string]$User,
+
+    [parameter(Mandatory=$True, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!")]
+    [string]$Password
+    )
+    return (Invoke-SecurityCenterRequest -Endpoint $Endpoint -Module 'alert' -Action 'init' -User $User -Password $Password).response
+}
+
+function global:Get-SecurityCenterAssets{
+<#
+    .SYNOPSIS
+    This Cmdlet allows you to quickly and easily interact with Tennable's Network Security Center Product. 
+ 
+    .DESCRIPTION
+    This module allows you to quickly and easily interact with Tennable's Network Security Center Product. The product's API does some weird things that aren't very well documented- requires a mixmatch of JSON and URL-encoded parameters in different locations, as well as having some pretty random parameters.
+ 
+    .EXAMPLE
+    Get-SecurityCenterAssets -Endpoint https://myseccenter.local/request.php -User admin -Password admin
+    Returns a result object, containing a results hashtable containing assets as stored in Security Center
+
+    .NOTES
+    Be sure to be using a HTTPS endpoint- basic authentication is used.
+
+    .LINK
+    https://github.com/antmldr/ps-tenable-security-center
+#>
+[CmdletBinding()]
+param(
+    [parameter(Mandatory=$True, HelpMessage="http(s) endpoint (typically https://host.example/request.php)")]
+    [string]$Endpoint,
+    
+    [parameter(Mandatory=$True, HelpMessage="SC API username, passed in using basic auth. Endpoint must support https for this to be encrypted!")] 
+    [string]$User,
+
+    [parameter(Mandatory=$True, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!")]
+    [string]$Password
+    )
+    return (Invoke-SecurityCenterRequest -Endpoint $Endpoint -Module 'asset' -Action 'init' -User $User -Password $Password).response
+}
+
+function global:Get-SecurityCenterIPs{
+<#
+    .SYNOPSIS
+    This Cmdlet allows you to quickly and easily interact with Tennable's Network Security Center Product. 
+ 
+    .DESCRIPTION
+    This module allows you to quickly and easily interact with Tennable's Network Security Center Product. The product's API does some weird things that aren't very well documented- requires a mixmatch of JSON and URL-encoded parameters in different locations, as well as having some pretty random parameters.
+ 
+    .EXAMPLE
+    Get-SecurityCenterIPs -Endpoint https://myseccenter.local/request.php -User admin -Password admin
+    Returns a result object, containing a results hashtable containing assets as stored in Security Center
+
+    .NOTES
+    Be sure to be using a HTTPS endpoint- basic authentication is used.
+
+    .LINK
+    https://github.com/antmldr/ps-tenable-security-center
+#>
+[CmdletBinding()]
+param(
+    [parameter(Mandatory=$True, HelpMessage="http(s) endpoint (typically https://host.example/request.php)")]
+    [string]$Endpoint,
+    
+    [parameter(Mandatory=$True, HelpMessage="SC API username, passed in using basic auth. Endpoint must support https for this to be encrypted!")] 
+    [string]$User,
+
+    [parameter(Mandatory=$True, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!")]
+    [string]$Password,
+
+    [parameter(Mandatory=$True, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!")]
+    [int]$id,
+
+    [parameter(Mandatory=$False, HelpMessage="SC API password. Endpoint must support https for this to be encrypted!",)]
+    [boolean]$ipsonly
+    )
+    return (Invoke-SecurityCenterRequest -Endpoint $Endpoint -Module 'asset' -Action 'init' -User $User -Password $Password).response
 }
